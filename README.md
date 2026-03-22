@@ -26,7 +26,7 @@ External resolution data sourced from [swe-bench/experiments](https://github.com
 ## Quick Start
 
 ```bash
-git clone https://github.com/nicobailon/vexp-swe-bench.git
+git clone https://github.com/Vexp-ai/vexp-swe-bench.git
 cd vexp-swe-bench
 
 # One command setup (Python >= 3.10, Node >= 18, Git required)
