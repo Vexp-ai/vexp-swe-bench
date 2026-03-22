@@ -1,0 +1,127 @@
+2026-03-21 22:27:45,934 - INFO - Creating container for sphinx-doc__sphinx-9230...
+2026-03-21 22:27:46,164 - INFO - Container for sphinx-doc__sphinx-9230 created: 50e4755077c8a7f2691e7f4aaacd563354e5884126fb95788023d608d097cab5
+2026-03-21 22:27:46,599 - INFO - Container for sphinx-doc__sphinx-9230 started: 50e4755077c8a7f2691e7f4aaacd563354e5884126fb95788023d608d097cab5
+2026-03-21 22:27:46,600 - INFO - Intermediate patch for sphinx-doc__sphinx-9230 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sphinx-doc__sphinx-9230/patch.diff, now applying to container...
+2026-03-21 22:27:46,675 - INFO - >>>>> Applied Patch:
+Checking patch sphinx/util/docfields.py...
+Applied patch sphinx/util/docfields.py cleanly.
+
+2026-03-21 22:27:46,852 - INFO - Git diff before:
+diff --git a/sphinx/util/docfields.py b/sphinx/util/docfields.py
+index 3a3367ebe..ce7353d3c 100644
+--- a/sphinx/util/docfields.py
++++ b/sphinx/util/docfields.py
+@@ -204,6 +204,39 @@ class TypedField(GroupedField):
+         return nodes.field('', fieldname, fieldbody)
+ 
+ 
++def _split_type_and_name(fieldarg: str) -> Tuple[str, str]:
++    """Split a typed field argument into type and name.
++
++    This handles types with parentheses or brackets like ``dict(str, str)`` or
++    ``Dict[str, str]`` properly, ensuring that the type isn't incorrectly split
++    at a space within parentheses or brackets.
++
++    :param fieldarg: The field argument to split (e.g., "dict(str, str) name")
++    :returns: A tuple of (type, name)
++    :raises ValueError: If the field argument cannot be split into type and name
++    """
++    # Track parenthesis/bracket depth to avoid splitting inside them
++    paren_depth = 0
++    bracket_depth = 0
++    for i, char in enumerate(fieldarg):
++        if char == '(':
++            paren_depth += 1
++        elif char == ')':
++            paren_depth -= 1
++        elif char == '[':
++            bracket_depth += 1
++        elif char == ']':
++            bracket_depth -= 1
++        elif char == ' ' and paren_depth == 0 and bracket_depth == 0:
++            # Found a space outside parentheses and brackets - split here
++            argtype = fieldarg[:i].strip()
++            argname = fieldarg[i:].strip()
++            if argtype and argname:
++                return argtype, argname
++            break
++    raise ValueError("Cannot split fieldarg")
++
++
+ class DocFieldTransformer:
+     """
+     Transforms field lists in "doc field" syntax into better-looking
+@@ -298,7 +331,7 @@ class DocFieldTransformer:
+             # also support syntax like ``:param type name:``
+             if typedesc.is_typed:
+                 try:
+-                    argtype, argname = fieldarg.split(None, 1)
++                    argtype, argname = _split_type_and_name(fieldarg)
+                 except ValueError:
+                     pass
+                 else:
+2026-03-21 22:27:46,855 - INFO - Eval script for sphinx-doc__sphinx-9230 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sphinx-doc__sphinx-9230/eval.sh; copying to container...
+2026-03-21 22:27:52,086 - INFO - Test runtime: 5.19 seconds
+2026-03-21 22:27:52,086 - INFO - Test output for sphinx-doc__sphinx-9230 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sphinx-doc__sphinx-9230/test_output.txt
+2026-03-21 22:27:52,123 - INFO - Git diff after:
+diff --git a/sphinx/util/docfields.py b/sphinx/util/docfields.py
+index 3a3367ebe..ce7353d3c 100644
+--- a/sphinx/util/docfields.py
++++ b/sphinx/util/docfields.py
+@@ -204,6 +204,39 @@ class TypedField(GroupedField):
+         return nodes.field('', fieldname, fieldbody)
+ 
+ 
++def _split_type_and_name(fieldarg: str) -> Tuple[str, str]:
++    """Split a typed field argument into type and name.
++
++    This handles types with parentheses or brackets like ``dict(str, str)`` or
++    ``Dict[str, str]`` properly, ensuring that the type isn't incorrectly split
++    at a space within parentheses or brackets.
++
++    :param fieldarg: The field argument to split (e.g., "dict(str, str) name")
++    :returns: A tuple of (type, name)
++    :raises ValueError: If the field argument cannot be split into type and name
++    """
++    # Track parenthesis/bracket depth to avoid splitting inside them
++    paren_depth = 0
++    bracket_depth = 0
++    for i, char in enumerate(fieldarg):
++        if char == '(':
++            paren_depth += 1
++        elif char == ')':
++            paren_depth -= 1
++        elif char == '[':
++            bracket_depth += 1
++        elif char == ']':
++            bracket_depth -= 1
++        elif char == ' ' and paren_depth == 0 and bracket_depth == 0:
++            # Found a space outside parentheses and brackets - split here
++            argtype = fieldarg[:i].strip()
++            argname = fieldarg[i:].strip()
++            if argtype and argname:
++                return argtype, argname
++            break
++    raise ValueError("Cannot split fieldarg")
++
++
+ class DocFieldTransformer:
+     """
+     Transforms field lists in "doc field" syntax into better-looking
+@@ -298,7 +331,7 @@ class DocFieldTransformer:
+             # also support syntax like ``:param type name:``
+             if typedesc.is_typed:
+                 try:
+-                    argtype, argname = fieldarg.split(None, 1)
++                    argtype, argname = _split_type_and_name(fieldarg)
+                 except ValueError:
+                     pass
+                 else:
+2026-03-21 22:27:52,123 - INFO - Grading answer for sphinx-doc__sphinx-9230...
+2026-03-21 22:27:52,128 - INFO - report: {'sphinx-doc__sphinx-9230': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['tests/test_domain_py.py::test_info_field_list'], 'failure': []}, 'PASS_TO_PASS': {'success': ['tests/test_domain_py.py::test_function_signatures', 'tests/test_domain_py.py::test_domain_py_xrefs', 'tests/test_domain_py.py::test_domain_py_xrefs_abbreviations', 'tests/test_domain_py.py::test_domain_py_objects', 'tests/test_domain_py.py::test_resolve_xref_for_properties', 'tests/test_domain_py.py::test_domain_py_find_obj', 'tests/test_domain_py.py::test_domain_py_canonical', 'tests/test_domain_py.py::test_get_full_qualified_name', 'tests/test_domain_py.py::test_parse_annotation', 'tests/test_domain_py.py::test_pyfunction_signature', 'tests/test_domain_py.py::test_pyfunction_signature_full', 'tests/test_domain_py.py::test_pyfunction_signature_full_py38', 'tests/test_domain_py.py::test_pyfunction_with_number_literals', 'tests/test_domain_py.py::test_pyfunction_with_union_type_operator', 'tests/test_domain_py.py::test_optional_pyfunction_signature', 'tests/test_domain_py.py::test_pyexception_signature', 'tests/test_domain_py.py::test_exceptions_module_is_ignored', 'tests/test_domain_py.py::test_pydata_signature', 'tests/test_domain_py.py::test_pydata_signature_old', 'tests/test_domain_py.py::test_pydata_with_union_type_operator', 'tests/test_domain_py.py::test_pyobject_prefix', 'tests/test_domain_py.py::test_pydata', 'tests/test_domain_py.py::test_pyfunction', 'tests/test_domain_py.py::test_pyclass_options', 'tests/test_domain_py.py::test_pymethod_options', 'tests/test_domain_py.py::test_pyclassmethod', 'tests/test_domain_py.py::test_pystaticmethod', 'tests/test_domain_py.py::test_pyattribute', 'tests/test_domain_py.py::test_pyproperty', 'tests/test_domain_py.py::test_pydecorator_signature', 'tests/test_domain_py.py::test_pydecoratormethod_signature', 'tests/test_domain_py.py::test_canonical', 'tests/test_domain_py.py::test_canonical_definition_overrides', 'tests/test_domain_py.py::test_canonical_definition_skip', 'tests/test_domain_py.py::test_canonical_duplicated', 'tests/test_domain_py.py::test_info_field_list_var', 'tests/test_domain_py.py::test_module_index', 'tests/test_domain_py.py::test_module_index_submodule', 'tests/test_domain_py.py::test_module_index_not_collapsed', 'tests/test_domain_py.py::test_modindex_common_prefix', 'tests/test_domain_py.py::test_noindexentry', 'tests/test_domain_py.py::test_python_python_use_unqualified_type_names', 'tests/test_domain_py.py::test_python_python_use_unqualified_type_names_disabled', 'tests/test_domain_py.py::test_warn_missing_reference'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sphinx-doc__sphinx-9230: resolved: True
+2026-03-21 22:27:52,129 - INFO - Attempting to stop container sweb.eval.sphinx-doc__sphinx-9230.vexp-swebench-1774108770738...
+2026-03-21 22:28:07,518 - INFO - Attempting to remove container sweb.eval.sphinx-doc__sphinx-9230.vexp-swebench-1774108770738...
+2026-03-21 22:28:07,536 - INFO - Container sweb.eval.sphinx-doc__sphinx-9230.vexp-swebench-1774108770738 removed.
+2026-03-21 22:28:07,536 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9230:latest...
+2026-03-21 22:28:07,599 - INFO - Image swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9230:latest removed.

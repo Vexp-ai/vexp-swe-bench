@@ -1,0 +1,71 @@
+2026-03-21 19:23:50,220 - INFO - Creating container for psf__requests-1142...
+2026-03-21 19:23:50,307 - INFO - Container for psf__requests-1142 created: 3ab4f87b0b14b7acd91cdb2a8ea3dde6bba3bf819284fb32d0d667ac19949b7a
+2026-03-21 19:23:50,523 - INFO - Container for psf__requests-1142 started: 3ab4f87b0b14b7acd91cdb2a8ea3dde6bba3bf819284fb32d0d667ac19949b7a
+2026-03-21 19:23:50,524 - INFO - Intermediate patch for psf__requests-1142 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/psf__requests-1142/patch.diff, now applying to container...
+2026-03-21 19:23:50,594 - INFO - >>>>> Applied Patch:
+Checking patch requests/models.py...
+Applied patch requests/models.py cleanly.
+
+2026-03-21 19:23:50,642 - INFO - Git diff before:
+diff --git a/requests/models.py b/requests/models.py
+index 9926045..17c1af7 100644
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -386,13 +386,13 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
+         self.body = body
+ 
+     def prepare_content_length(self, body):
+-        self.headers['Content-Length'] = '0'
+-        if hasattr(body, 'seek') and hasattr(body, 'tell'):
+-            body.seek(0, 2)
+-            self.headers['Content-Length'] = str(body.tell())
+-            body.seek(0, 0)
+-        elif body is not None:
+-            self.headers['Content-Length'] = str(len(body))
++        if body is not None:
++            if hasattr(body, 'seek') and hasattr(body, 'tell'):
++                body.seek(0, 2)
++                self.headers['Content-Length'] = str(body.tell())
++                body.seek(0, 0)
++            else:
++                self.headers['Content-Length'] = str(len(body))
+ 
+     def prepare_auth(self, auth):
+         """Prepares the given HTTP auth data."""
+2026-03-21 19:23:50,642 - INFO - Eval script for psf__requests-1142 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/psf__requests-1142/eval.sh; copying to container...
+2026-03-21 19:23:52,967 - INFO - Test runtime: 2.29 seconds
+2026-03-21 19:23:52,968 - INFO - Test output for psf__requests-1142 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/psf__requests-1142/test_output.txt
+2026-03-21 19:23:53,005 - INFO - Git diff after:
+diff --git a/requests/models.py b/requests/models.py
+index 9926045..17c1af7 100644
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -386,13 +386,13 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
+         self.body = body
+ 
+     def prepare_content_length(self, body):
+-        self.headers['Content-Length'] = '0'
+-        if hasattr(body, 'seek') and hasattr(body, 'tell'):
+-            body.seek(0, 2)
+-            self.headers['Content-Length'] = str(body.tell())
+-            body.seek(0, 0)
+-        elif body is not None:
+-            self.headers['Content-Length'] = str(len(body))
++        if body is not None:
++            if hasattr(body, 'seek') and hasattr(body, 'tell'):
++                body.seek(0, 2)
++                self.headers['Content-Length'] = str(body.tell())
++                body.seek(0, 0)
++            else:
++                self.headers['Content-Length'] = str(len(body))
+ 
+     def prepare_auth(self, auth):
+         """Prepares the given HTTP auth data."""
+2026-03-21 19:23:53,005 - INFO - Grading answer for psf__requests-1142...
+2026-03-21 19:23:53,010 - INFO - report: {'psf__requests-1142': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_requests.py::RequestsTestCase::test_no_content_length'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_requests.py::RequestsTestCase::test_basic_building', 'test_requests.py::RequestsTestCase::test_entry_points', 'test_requests.py::RequestsTestCase::test_invalid_url', 'test_requests.py::RequestsTestCase::test_params_are_added_before_fragment', 'test_requests.py::RequestsTestCase::test_path_is_not_double_encoded'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for psf__requests-1142: resolved: True
+2026-03-21 19:23:53,011 - INFO - Attempting to stop container sweb.eval.psf__requests-1142.vexp-swebench-1774108770738...
+2026-03-21 19:24:08,435 - INFO - Attempting to remove container sweb.eval.psf__requests-1142.vexp-swebench-1774108770738...
+2026-03-21 19:24:08,449 - INFO - Container sweb.eval.psf__requests-1142.vexp-swebench-1774108770738 removed.
+2026-03-21 19:24:08,450 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.psf_1776_requests-1142:latest...
+2026-03-21 19:24:08,469 - INFO - Image swebench/sweb.eval.x86_64.psf_1776_requests-1142:latest removed.

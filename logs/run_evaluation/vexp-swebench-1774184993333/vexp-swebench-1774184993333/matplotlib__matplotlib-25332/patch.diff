@@ -1,0 +1,27 @@
+diff --git a/lib/matplotlib/cbook.py b/lib/matplotlib/cbook.py
+index c9699b2e..bd799d23 100644
+--- a/lib/matplotlib/cbook.py
++++ b/lib/matplotlib/cbook.py
+@@ -846,6 +846,22 @@ class Grouper:
+         siblings = self._mapping.get(weakref.ref(a), [weakref.ref(a)])
+         return [x() for x in siblings]
+ 
++    def __getstate__(self):
++        # Convert weakrefs to actual objects for pickling.
++        # Group objects by their set identity (same list = same group).
++        self.clean()
++        unique_groups = {id(group): group for group in self._mapping.values()}
++        return {'groups': [[ref() for ref in group]
++                           for group in unique_groups.values()]}
++
++    def __setstate__(self, state):
++        # Restore weakrefs from the pickled objects.
++        self._mapping = {}
++        for group in state['groups']:
++            refs = [weakref.ref(obj) for obj in group]
++            for ref in refs:
++                self._mapping[ref] = refs
++
+ 
+ class GrouperView:
+     """Immutable view over a `.Grouper`."""

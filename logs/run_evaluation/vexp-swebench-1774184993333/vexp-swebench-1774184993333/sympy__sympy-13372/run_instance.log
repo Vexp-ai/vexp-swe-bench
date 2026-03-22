@@ -1,0 +1,63 @@
+2026-03-21 22:43:50,477 - INFO - Creating container for sympy__sympy-13372...
+2026-03-21 22:43:51,572 - INFO - Container for sympy__sympy-13372 created: 1ea5fa2a877a4c6222d0193788c99e5187796c4906371d9936ede8c7f3709c66
+2026-03-21 22:43:51,753 - INFO - Container for sympy__sympy-13372 started: 1ea5fa2a877a4c6222d0193788c99e5187796c4906371d9936ede8c7f3709c66
+2026-03-21 22:43:51,753 - INFO - Intermediate patch for sympy__sympy-13372 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sympy__sympy-13372/patch.diff, now applying to container...
+2026-03-21 22:43:51,822 - INFO - >>>>> Applied Patch:
+Checking patch sympy/core/evalf.py...
+Applied patch sympy/core/evalf.py cleanly.
+
+2026-03-21 22:43:52,045 - INFO - Git diff before:
+diff --git a/sympy/core/evalf.py b/sympy/core/evalf.py
+index 72a5fbae5..f34908710 100644
+--- a/sympy/core/evalf.py
++++ b/sympy/core/evalf.py
+@@ -1301,12 +1301,16 @@ def evalf(x, prec, options):
+             elif re.is_number:
+                 re = re._to_mpmath(prec, allow_ints=False)._mpf_
+                 reprec = prec
++            else:
++                raise NotImplementedError
+             if im == 0:
+                 im = None
+                 imprec = None
+             elif im.is_number:
+                 im = im._to_mpmath(prec, allow_ints=False)._mpf_
+                 imprec = prec
++            else:
++                raise NotImplementedError
+             r = re, im, reprec, imprec
+         except AttributeError:
+             raise NotImplementedError
+2026-03-21 22:43:52,046 - INFO - Eval script for sympy__sympy-13372 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sympy__sympy-13372/eval.sh; copying to container...
+2026-03-21 22:44:07,463 - INFO - Test runtime: 15.38 seconds
+2026-03-21 22:44:07,463 - INFO - Test output for sympy__sympy-13372 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sympy__sympy-13372/test_output.txt
+2026-03-21 22:44:07,500 - INFO - Git diff after:
+diff --git a/sympy/core/evalf.py b/sympy/core/evalf.py
+index 72a5fbae5..f34908710 100644
+--- a/sympy/core/evalf.py
++++ b/sympy/core/evalf.py
+@@ -1301,12 +1301,16 @@ def evalf(x, prec, options):
+             elif re.is_number:
+                 re = re._to_mpmath(prec, allow_ints=False)._mpf_
+                 reprec = prec
++            else:
++                raise NotImplementedError
+             if im == 0:
+                 im = None
+                 imprec = None
+             elif im.is_number:
+                 im = im._to_mpmath(prec, allow_ints=False)._mpf_
+                 imprec = prec
++            else:
++                raise NotImplementedError
+             r = re, im, reprec, imprec
+         except AttributeError:
+             raise NotImplementedError
+2026-03-21 22:44:07,500 - INFO - Grading answer for sympy__sympy-13372...
+2026-03-21 22:44:07,501 - INFO - report: {'sympy__sympy-13372': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_evalf_bugs'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_evalf_helpers', 'test_evalf_basic', 'test_cancellation', 'test_evalf_powers', 'test_evalf_rump', 'test_evalf_complex', 'test_evalf_complex_powers', 'test_evalf_exponentiation', 'test_evalf_complex_cancellation', 'test_evalf_logs', 'test_evalf_trig', 'test_evalf_near_integers', 'test_evalf_ramanujan', 'test_evalf_integer_parts', 'test_evalf_trig_zero_detection', 'test_evalf_sum', 'test_evalf_divergent_series', 'test_evalf_product', 'test_evalf_py_methods', 'test_evalf_power_subs_bugs', 'test_evalf_arguments', 'test_implemented_function_evalf', 'test_evaluate_false', 'test_evalf_relational', 'test_issue_5486', 'test_issue_5486_bug', 'test_bugs', 'test_subs', 'test_issue_4956_5204', 'test_old_docstring', 'test_issue_4806', 'test_evalf_mul', 'test_scaled_zero', 'test_chop_value', 'test_infinities', 'test_to_mpmath', 'test_issue_6632_evalf', 'test_issue_4945', 'test_evalf_integral', 'test_issue_8821_highprec_from_str', 'test_issue_8853', 'test_issue_9326', 'test_issue_10323', 'test_AssocOp_Function'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-13372: resolved: True
+2026-03-21 22:44:07,501 - INFO - Attempting to stop container sweb.eval.sympy__sympy-13372.vexp-swebench-1774108770738...
+2026-03-21 22:44:22,901 - INFO - Attempting to remove container sweb.eval.sympy__sympy-13372.vexp-swebench-1774108770738...
+2026-03-21 22:44:22,925 - INFO - Container sweb.eval.sympy__sympy-13372.vexp-swebench-1774108770738 removed.
+2026-03-21 22:44:22,925 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-13372:latest...
+2026-03-21 22:44:22,975 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-13372:latest removed.

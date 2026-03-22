@@ -1,0 +1,53 @@
+2026-03-21 19:40:58,009 - INFO - Creating container for pydata__xarray-3677...
+2026-03-21 19:40:58,092 - INFO - Container for pydata__xarray-3677 created: 8306d0c1f305e65313440ea1083ad059aa7fe8a7686f2d12088187a45b338f15
+2026-03-21 19:40:58,414 - INFO - Container for pydata__xarray-3677 started: 8306d0c1f305e65313440ea1083ad059aa7fe8a7686f2d12088187a45b338f15
+2026-03-21 19:40:58,414 - INFO - Intermediate patch for pydata__xarray-3677 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/pydata__xarray-3677/patch.diff, now applying to container...
+2026-03-21 19:40:58,504 - INFO - >>>>> Applied Patch:
+Checking patch xarray/core/merge.py...
+Applied patch xarray/core/merge.py cleanly.
+
+2026-03-21 19:40:58,583 - INFO - Git diff before:
+diff --git a/xarray/core/merge.py b/xarray/core/merge.py
+index 10c7804d..4058ff36 100644
+--- a/xarray/core/merge.py
++++ b/xarray/core/merge.py
+@@ -809,6 +809,11 @@ def dataset_merge_method(
+     # method due for backwards compatibility
+     # TODO: consider deprecating it?
+ 
++    from .dataarray import DataArray
++
++    if isinstance(other, DataArray):
++        other = other.to_dataset()
++
+     if isinstance(overwrite_vars, Iterable) and not isinstance(overwrite_vars, str):
+         overwrite_vars = set(overwrite_vars)
+     else:
+2026-03-21 19:40:58,583 - INFO - Eval script for pydata__xarray-3677 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/pydata__xarray-3677/eval.sh; copying to container...
+2026-03-21 19:41:05,651 - INFO - Test runtime: 7.03 seconds
+2026-03-21 19:41:05,652 - INFO - Test output for pydata__xarray-3677 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/pydata__xarray-3677/test_output.txt
+2026-03-21 19:41:05,688 - INFO - Git diff after:
+diff --git a/xarray/core/merge.py b/xarray/core/merge.py
+index 10c7804d..4058ff36 100644
+--- a/xarray/core/merge.py
++++ b/xarray/core/merge.py
+@@ -809,6 +809,11 @@ def dataset_merge_method(
+     # method due for backwards compatibility
+     # TODO: consider deprecating it?
+ 
++    from .dataarray import DataArray
++
++    if isinstance(other, DataArray):
++        other = other.to_dataset()
++
+     if isinstance(overwrite_vars, Iterable) and not isinstance(overwrite_vars, str):
+         overwrite_vars = set(overwrite_vars)
+     else:
+2026-03-21 19:41:05,688 - INFO - Grading answer for pydata__xarray-3677...
+2026-03-21 19:41:05,688 - INFO - report: {'pydata__xarray-3677': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['xarray/tests/test_merge.py::TestMergeMethod::test_merge_dataarray'], 'failure': []}, 'PASS_TO_PASS': {'success': ['xarray/tests/test_merge.py::TestMergeInternals::test_broadcast_dimension_size', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_arrays', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_datasets', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_dataarray_unnamed', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_dicts_simple', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_dicts_dims', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_error', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_alignment_error', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_wrong_input_error', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_single_var', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_multi_var', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_preserve_attrs', 'xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_broadcast', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_broadcast_equals', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_compat', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_auto_align', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_fill_value[fill_value0]', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_fill_value[2]', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_fill_value[2.0]', 'xarray/tests/test_merge.py::TestMergeMethod::test_merge_no_conflicts'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for pydata__xarray-3677: resolved: True
+2026-03-21 19:41:05,689 - INFO - Attempting to stop container sweb.eval.pydata__xarray-3677.vexp-swebench-1774108770738...
+2026-03-21 19:41:21,110 - INFO - Attempting to remove container sweb.eval.pydata__xarray-3677.vexp-swebench-1774108770738...
+2026-03-21 19:41:21,134 - INFO - Container sweb.eval.pydata__xarray-3677.vexp-swebench-1774108770738 removed.
+2026-03-21 19:41:21,134 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.pydata_1776_xarray-3677:latest...
+2026-03-21 19:41:21,161 - INFO - Image swebench/sweb.eval.x86_64.pydata_1776_xarray-3677:latest removed.

@@ -1,0 +1,77 @@
+diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py
+index 90b0bf11..376a97b1 100644
+--- a/lib/matplotlib/axes/_base.py
++++ b/lib/matplotlib/axes/_base.py
+@@ -1308,8 +1308,15 @@ class _AxesBase(martist.Artist):
+         self._get_patches_for_fill = _process_plot_var_args(self, 'fill')
+ 
+         self._gridOn = mpl.rcParams['axes.grid']
++        # Clear children and decouple them from the Axes
++        for chld in self._children:
++            chld.axes = None
++            chld.stale_callback = None
+         self._children = []
+         self._mouseover_set = _OrderedSet()
++        for child in getattr(self, 'child_axes', []):
++            child.axes = None
++            child.stale_callback = None
+         self.child_axes = []
+         self._current_image = None  # strictly for pyplot via _sci, _gci
+         self._projection_init = None  # strictly for pyplot.subplot
+diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py
+index 6c18ba1a..8b8c609b 100644
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -943,22 +943,52 @@ default: %(va)s
+         # first clear the axes in any subfigures
+         for subfig in self.subfigs:
+             subfig.clear(keep_observers=keep_observers)
++            subfig.figure = None
++            subfig.stale_callback = None
+         self.subfigs = []
+ 
+         for ax in tuple(self.axes):  # Iterate over the copy.
+             ax.clear()
+             self.delaxes(ax)  # Remove ax from self._axstack.
+ 
++        # Clear figure artists and decouple them from the Figure
++        for artist in self.artists:
++            artist.figure = None
++            artist.stale_callback = None
+         self.artists = []
++        for artist in self.lines:
++            artist.figure = None
++            artist.stale_callback = None
+         self.lines = []
++        for artist in self.patches:
++            artist.figure = None
++            artist.stale_callback = None
+         self.patches = []
++        for artist in self.texts:
++            artist.figure = None
++            artist.stale_callback = None
+         self.texts = []
++        for artist in self.images:
++            artist.figure = None
++            artist.stale_callback = None
+         self.images = []
++        for artist in self.legends:
++            artist.figure = None
++            artist.stale_callback = None
+         self.legends = []
+         if not keep_observers:
+             self._axobservers = cbook.CallbackRegistry()
++        if self._suptitle is not None:
++            self._suptitle.figure = None
++            self._suptitle.stale_callback = None
+         self._suptitle = None
++        if self._supxlabel is not None:
++            self._supxlabel.figure = None
++            self._supxlabel.stale_callback = None
+         self._supxlabel = None
++        if self._supylabel is not None:
++            self._supylabel.figure = None
++            self._supylabel.stale_callback = None
+         self._supylabel = None
+ 
+         self.stale = True

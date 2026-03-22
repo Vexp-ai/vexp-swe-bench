@@ -1,0 +1,16 @@
+diff --git a/requests/models.py b/requests/models.py
+index e7d292d..d7c84c0 100644
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -405,6 +405,11 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
+                 raise InvalidURL('URL has an invalid label.')
+         elif host.startswith(u'*'):
+             raise InvalidURL('URL has an invalid label.')
++        else:
++            try:
++                self._get_idna_encoded_host(host)
++            except UnicodeError:
++                raise InvalidURL('URL has an invalid label.')
+ 
+         # Carefully reconstruct the network location
+         netloc = auth or ''

@@ -1,0 +1,57 @@
+diff --git a/xarray/core/computation.py b/xarray/core/computation.py
+index c332ecb..06c63b0 100644
+--- a/xarray/core/computation.py
++++ b/xarray/core/computation.py
+@@ -452,7 +452,7 @@ def _iter_over_selections(obj, dim, values):
+     dummy = None
+     for value in values:
+         try:
+-            obj_sel = obj.sel(**{dim: value})
++            obj_sel = obj.sel({dim: value})
+         except (KeyError, IndexError):
+             if dummy is None:
+                 dummy = _dummy_copy(obj)
+diff --git a/xarray/core/dataarray.py b/xarray/core/dataarray.py
+index 32b24ef..6316afd 100644
+--- a/xarray/core/dataarray.py
++++ b/xarray/core/dataarray.py
+@@ -196,7 +196,7 @@ class _LocIndexer:
+             # expand the indexer so we can handle Ellipsis
+             labels = indexing.expanded_indexer(key, self.data_array.ndim)
+             key = dict(zip(self.data_array.dims, labels))
+-        return self.data_array.sel(**key)
++        return self.data_array.sel(key)
+ 
+     def __setitem__(self, key, value) -> None:
+         if not utils.is_dict_like(key):
+diff --git a/xarray/core/groupby.py b/xarray/core/groupby.py
+index e1e5a0f..6cf9e01 100644
+--- a/xarray/core/groupby.py
++++ b/xarray/core/groupby.py
+@@ -451,7 +451,7 @@ class GroupBy(SupportsArithmetic):
+     def _iter_grouped(self):
+         """Iterate over each element in this group"""
+         for indices in self._group_indices:
+-            yield self._obj.isel(**{self._group_dim: indices})
++            yield self._obj.isel({self._group_dim: indices})
+ 
+     def _infer_concat_args(self, applied_example):
+         if self._group_dim in applied_example.dims:
+@@ -481,7 +481,7 @@ class GroupBy(SupportsArithmetic):
+ 
+         for group_value, obj in self:
+             try:
+-                other_sel = other.sel(**{self._group.name: group_value})
++                other_sel = other.sel({self._group.name: group_value})
+             except AttributeError:
+                 raise TypeError(
+                     "GroupBy objects only support binary ops "
+@@ -508,7 +508,7 @@ class GroupBy(SupportsArithmetic):
+         """
+         if self._full_index is not None and self._group.name in combined.dims:
+             indexers = {self._group.name: self._full_index}
+-            combined = combined.reindex(**indexers)
++            combined = combined.reindex(indexers)
+         return combined
+ 
+     def _maybe_unstack(self, obj):

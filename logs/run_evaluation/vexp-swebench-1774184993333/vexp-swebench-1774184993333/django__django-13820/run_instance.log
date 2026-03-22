@@ -1,0 +1,71 @@
+2026-03-21 11:12:43,943 - INFO - Creating container for django__django-13820...
+2026-03-21 11:12:44,060 - INFO - Container for django__django-13820 created: e1b2d65cc09e2a8b18eeb49c9ae929d3190ce0ce9da35f4a43f64c291364e8e7
+2026-03-21 11:12:44,212 - INFO - Container for django__django-13820 started: e1b2d65cc09e2a8b18eeb49c9ae929d3190ce0ce9da35f4a43f64c291364e8e7
+2026-03-21 11:12:44,212 - INFO - Intermediate patch for django__django-13820 written to logs/run_evaluation/vexp-swebench-1774083520888/vexp-swebench-1774083520888/django__django-13820/patch.diff, now applying to container...
+2026-03-21 11:12:44,290 - INFO - >>>>> Applied Patch:
+Checking patch django/db/migrations/loader.py...
+Applied patch django/db/migrations/loader.py cleanly.
+
+2026-03-21 11:12:44,804 - INFO - Git diff before:
+diff --git a/django/db/migrations/loader.py b/django/db/migrations/loader.py
+index 95a5062ec9..90621b4b25 100644
+--- a/django/db/migrations/loader.py
++++ b/django/db/migrations/loader.py
+@@ -88,15 +88,15 @@ class MigrationLoader:
+                     continue
+                 raise
+             else:
+-                # Empty directories are namespaces.
+-                # getattr() needed on PY36 and older (replace w/attribute access).
+-                if getattr(module, '__file__', None) is None:
+-                    self.unmigrated_apps.add(app_config.label)
+-                    continue
+                 # Module is not a package (e.g. migrations.py).
+                 if not hasattr(module, '__path__'):
+                     self.unmigrated_apps.add(app_config.label)
+                     continue
++                # Empty directories are namespaces. Namespace packages have no
++                # __file__ and their __path__ is not a list.
++                if getattr(module, '__file__', None) is None and not isinstance(module.__path__, list):
++                    self.unmigrated_apps.add(app_config.label)
++                    continue
+                 # Force a reload if it's already loaded (tests need this)
+                 if was_loaded:
+                     reload(module)
+2026-03-21 11:12:44,805 - INFO - Eval script for django__django-13820 written to logs/run_evaluation/vexp-swebench-1774083520888/vexp-swebench-1774083520888/django__django-13820/eval.sh; copying to container...
+2026-03-21 11:12:51,464 - INFO - Test runtime: 6.62 seconds
+2026-03-21 11:12:51,465 - INFO - Test output for django__django-13820 written to logs/run_evaluation/vexp-swebench-1774083520888/vexp-swebench-1774083520888/django__django-13820/test_output.txt
+2026-03-21 11:12:51,534 - INFO - Git diff after:
+diff --git a/django/db/migrations/loader.py b/django/db/migrations/loader.py
+index 95a5062ec9..90621b4b25 100644
+--- a/django/db/migrations/loader.py
++++ b/django/db/migrations/loader.py
+@@ -88,15 +88,15 @@ class MigrationLoader:
+                     continue
+                 raise
+             else:
+-                # Empty directories are namespaces.
+-                # getattr() needed on PY36 and older (replace w/attribute access).
+-                if getattr(module, '__file__', None) is None:
+-                    self.unmigrated_apps.add(app_config.label)
+-                    continue
+                 # Module is not a package (e.g. migrations.py).
+                 if not hasattr(module, '__path__'):
+                     self.unmigrated_apps.add(app_config.label)
+                     continue
++                # Empty directories are namespaces. Namespace packages have no
++                # __file__ and their __path__ is not a list.
++                if getattr(module, '__file__', None) is None and not isinstance(module.__path__, list):
++                    self.unmigrated_apps.add(app_config.label)
++                    continue
+                 # Force a reload if it's already loaded (tests need this)
+                 if was_loaded:
+                     reload(module)
+2026-03-21 11:12:51,534 - INFO - Grading answer for django__django-13820...
+2026-03-21 11:12:51,535 - INFO - report: {'django__django-13820': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_loading_package_without__file__ (migrations.test_loader.LoaderTests)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_apply (migrations.test_loader.RecorderTests)', 'test_invalid (migrations.test_loader.PycLoaderTests)', 'test_valid (migrations.test_loader.PycLoaderTests)', 'test_check_consistent_history (migrations.test_loader.LoaderTests)', 'test_check_consistent_history_squashed (migrations.test_loader.LoaderTests)', 'test_explicit_missing_module (migrations.test_loader.LoaderTests)', "Files prefixed with underscore, tilde, or dot aren't loaded.", 'test_load (migrations.test_loader.LoaderTests)', 'test_load_empty_dir (migrations.test_loader.LoaderTests)', 'test_load_import_error (migrations.test_loader.LoaderTests)', 'test_load_module_file (migrations.test_loader.LoaderTests)', 'test_load_unmigrated_dependency (migrations.test_loader.LoaderTests)', 'Migration directories without an __init__.py file are ignored.', 'Tests loading a squashed migration', 'Tests loading a complex set of squashed migrations', 'test_loading_squashed_complex_multi_apps (migrations.test_loader.LoaderTests)', 'test_loading_squashed_complex_multi_apps_partially_applied (migrations.test_loader.LoaderTests)', 'Tests loading a complex but erroneous set of squashed migrations', 'Tests loading a squashed migration with a new migration referencing it', 'test_marked_as_migrated (migrations.test_loader.LoaderTests)', 'test_marked_as_unmigrated (migrations.test_loader.LoaderTests)', 'Tests prefix name matching', 'test_plan_handles_repeated_migrations (migrations.test_loader.LoaderTests)', 'test_run_before (migrations.test_loader.LoaderTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-13820: resolved: True
+2026-03-21 11:12:51,535 - INFO - Attempting to stop container sweb.eval.django__django-13820.vexp-swebench-1774083520888...
+2026-03-21 11:13:07,166 - INFO - Attempting to remove container sweb.eval.django__django-13820.vexp-swebench-1774083520888...
+2026-03-21 11:13:07,192 - INFO - Container sweb.eval.django__django-13820.vexp-swebench-1774083520888 removed.
+2026-03-21 11:13:07,192 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.django_1776_django-13820:latest...
+2026-03-21 11:13:07,369 - INFO - Image swebench/sweb.eval.x86_64.django_1776_django-13820:latest removed.

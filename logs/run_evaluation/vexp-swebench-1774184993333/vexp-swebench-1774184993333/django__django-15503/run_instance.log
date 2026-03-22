@@ -1,0 +1,157 @@
+2026-03-21 12:12:36,294 - INFO - Creating container for django__django-15503...
+2026-03-21 12:12:36,373 - INFO - Container for django__django-15503 created: 51a450d97803c14977f59bed2f543cdc3ed7018c6be1a5ede2aaeff7ba8adcba
+2026-03-21 12:12:36,528 - INFO - Container for django__django-15503 started: 51a450d97803c14977f59bed2f543cdc3ed7018c6be1a5ede2aaeff7ba8adcba
+2026-03-21 12:12:36,528 - INFO - Intermediate patch for django__django-15503 written to logs/run_evaluation/vexp-swebench-1774090616238/vexp-swebench-1774090616238/django__django-15503/patch.diff, now applying to container...
+2026-03-21 12:12:36,596 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/fields/json.py...
+Applied patch django/db/models/fields/json.py cleanly.
+
+2026-03-21 12:12:37,077 - INFO - Git diff before:
+diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py
+index fdca700c9d..c5a0c05513 100644
+--- a/django/db/models/fields/json.py
++++ b/django/db/models/fields/json.py
+@@ -191,15 +191,19 @@ class HasKeyLookup(PostgresOperatorLookup):
+         for key in rhs:
+             if isinstance(key, KeyTransform):
+                 *_, rhs_key_transforms = key.preprocess_lhs(compiler, connection)
+-            else:
+-                rhs_key_transforms = [key]
+-            rhs_params.append(
+-                "%s%s"
+-                % (
+-                    lhs_json_path,
+-                    compile_json_path(rhs_key_transforms, include_root=False),
++                rhs_params.append(
++                    "%s%s"
++                    % (
++                        lhs_json_path,
++                        compile_json_path(rhs_key_transforms, include_root=False),
++                    )
+                 )
+-            )
++            else:
++                # For has_key, has_keys, and has_any_keys lookups, the key is
++                # always an object key, not an array index. Use JSON string
++                # key notation to ensure numeric strings like "1111" are
++                # treated as object keys.
++                rhs_params.append("%s.%s" % (lhs_json_path, json.dumps(key)))
+         # Add condition for each key.
+         if self.logical_operator:
+             sql = "(%s)" % self.logical_operator.join([sql] * len(rhs_params))
+@@ -387,25 +391,20 @@ class KeyTransformTextLookupMixin:
+ class KeyTransformIsNull(lookups.IsNull):
+     # key__isnull=False is the same as has_key='key'
+     def as_oracle(self, compiler, connection):
+-        sql, params = HasKey(
+-            self.lhs.lhs,
+-            self.lhs.key_name,
+-        ).as_oracle(compiler, connection)
++        lhs, params, key_transforms = self.lhs.preprocess_lhs(compiler, connection)
++        json_path = compile_json_path(key_transforms)
++        sql = "JSON_EXISTS(%s, '%s')" % (lhs, json_path)
+         if not self.rhs:
+-            return sql, params
++            return sql, tuple(params)
+         # Column doesn't have a key or IS NULL.
+-        lhs, lhs_params, _ = self.lhs.preprocess_lhs(compiler, connection)
+-        return "(NOT %s OR %s IS NULL)" % (sql, lhs), tuple(params) + tuple(lhs_params)
++        return "(NOT %s OR %s IS NULL)" % (sql, lhs), tuple(params) + tuple(params)
+ 
+     def as_sqlite(self, compiler, connection):
+-        template = "JSON_TYPE(%s, %%s) IS NULL"
+-        if not self.rhs:
+-            template = "JSON_TYPE(%s, %%s) IS NOT NULL"
+-        return HasKey(self.lhs.lhs, self.lhs.key_name).as_sql(
+-            compiler,
+-            connection,
+-            template=template,
+-        )
++        lhs, params, key_transforms = self.lhs.preprocess_lhs(compiler, connection)
++        json_path = compile_json_path(key_transforms)
++        if self.rhs:
++            return "JSON_TYPE(%s, %%s) IS NULL" % lhs, tuple(params) + (json_path,)
++        return "JSON_TYPE(%s, %%s) IS NOT NULL" % lhs, tuple(params) + (json_path,)
+ 
+ 
+ class KeyTransformIn(lookups.In):
+2026-03-21 12:12:37,077 - INFO - Eval script for django__django-15503 written to logs/run_evaluation/vexp-swebench-1774090616238/vexp-swebench-1774090616238/django__django-15503/eval.sh; copying to container...
+2026-03-21 12:12:49,875 - INFO - Test runtime: 12.76 seconds
+2026-03-21 12:12:49,875 - INFO - Test output for django__django-15503 written to logs/run_evaluation/vexp-swebench-1774090616238/vexp-swebench-1774090616238/django__django-15503/test_output.txt
+2026-03-21 12:12:49,919 - INFO - Git diff after:
+diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py
+index fdca700c9d..c5a0c05513 100644
+--- a/django/db/models/fields/json.py
++++ b/django/db/models/fields/json.py
+@@ -191,15 +191,19 @@ class HasKeyLookup(PostgresOperatorLookup):
+         for key in rhs:
+             if isinstance(key, KeyTransform):
+                 *_, rhs_key_transforms = key.preprocess_lhs(compiler, connection)
+-            else:
+-                rhs_key_transforms = [key]
+-            rhs_params.append(
+-                "%s%s"
+-                % (
+-                    lhs_json_path,
+-                    compile_json_path(rhs_key_transforms, include_root=False),
++                rhs_params.append(
++                    "%s%s"
++                    % (
++                        lhs_json_path,
++                        compile_json_path(rhs_key_transforms, include_root=False),
++                    )
+                 )
+-            )
++            else:
++                # For has_key, has_keys, and has_any_keys lookups, the key is
++                # always an object key, not an array index. Use JSON string
++                # key notation to ensure numeric strings like "1111" are
++                # treated as object keys.
++                rhs_params.append("%s.%s" % (lhs_json_path, json.dumps(key)))
+         # Add condition for each key.
+         if self.logical_operator:
+             sql = "(%s)" % self.logical_operator.join([sql] * len(rhs_params))
+@@ -387,25 +391,20 @@ class KeyTransformTextLookupMixin:
+ class KeyTransformIsNull(lookups.IsNull):
+     # key__isnull=False is the same as has_key='key'
+     def as_oracle(self, compiler, connection):
+-        sql, params = HasKey(
+-            self.lhs.lhs,
+-            self.lhs.key_name,
+-        ).as_oracle(compiler, connection)
++        lhs, params, key_transforms = self.lhs.preprocess_lhs(compiler, connection)
++        json_path = compile_json_path(key_transforms)
++        sql = "JSON_EXISTS(%s, '%s')" % (lhs, json_path)
+         if not self.rhs:
+-            return sql, params
++            return sql, tuple(params)
+         # Column doesn't have a key or IS NULL.
+-        lhs, lhs_params, _ = self.lhs.preprocess_lhs(compiler, connection)
+-        return "(NOT %s OR %s IS NULL)" % (sql, lhs), tuple(params) + tuple(lhs_params)
++        return "(NOT %s OR %s IS NULL)" % (sql, lhs), tuple(params) + tuple(params)
+ 
+     def as_sqlite(self, compiler, connection):
+-        template = "JSON_TYPE(%s, %%s) IS NULL"
+-        if not self.rhs:
+-            template = "JSON_TYPE(%s, %%s) IS NOT NULL"
+-        return HasKey(self.lhs.lhs, self.lhs.key_name).as_sql(
+-            compiler,
+-            connection,
+-            template=template,
+-        )
++        lhs, params, key_transforms = self.lhs.preprocess_lhs(compiler, connection)
++        json_path = compile_json_path(key_transforms)
++        if self.rhs:
++            return "JSON_TYPE(%s, %%s) IS NULL" % lhs, tuple(params) + (json_path,)
++        return "JSON_TYPE(%s, %%s) IS NOT NULL" % lhs, tuple(params) + (json_path,)
+ 
+ 
+ class KeyTransformIn(lookups.In):
+2026-03-21 12:12:49,919 - INFO - Grading answer for django__django-15503...
+2026-03-21 12:12:49,920 - INFO - report: {'django__django-15503': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_has_key_number (model_fields.test_jsonfield.TestQuerying)', 'test_has_keys (model_fields.test_jsonfield.TestQuerying)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_formfield (model_fields.test_jsonfield.TestFormField)', 'test_formfield_custom_encoder_decoder (model_fields.test_jsonfield.TestFormField)', 'test_custom_encoder (model_fields.test_jsonfield.TestValidation)', 'test_invalid_decoder (model_fields.test_jsonfield.TestValidation)', 'test_invalid_encoder (model_fields.test_jsonfield.TestValidation)', 'test_validation_error (model_fields.test_jsonfield.TestValidation)', 'test_custom_encoder_decoder (model_fields.test_jsonfield.JSONFieldTests)', 'test_db_check_constraints (model_fields.test_jsonfield.JSONFieldTests)', 'test_invalid_value (model_fields.test_jsonfield.JSONFieldTests)', 'test_deconstruct (model_fields.test_jsonfield.TestMethods)', 'test_deconstruct_custom_encoder_decoder (model_fields.test_jsonfield.TestMethods)', 'test_get_transforms (model_fields.test_jsonfield.TestMethods)', 'test_key_transform_text_lookup_mixin_non_key_transform (model_fields.test_jsonfield.TestMethods)', 'test_dict (model_fields.test_jsonfield.TestSaveLoad)', 'test_json_null_different_from_sql_null (model_fields.test_jsonfield.TestSaveLoad)', 'test_list (model_fields.test_jsonfield.TestSaveLoad)', 'test_null (model_fields.test_jsonfield.TestSaveLoad)', 'test_primitives (model_fields.test_jsonfield.TestSaveLoad)', 'test_realistic_object (model_fields.test_jsonfield.TestSaveLoad)', 'test_dumping (model_fields.test_jsonfield.TestSerialization)', 'test_loading (model_fields.test_jsonfield.TestSerialization)', 'test_xml_serialization (model_fields.test_jsonfield.TestSerialization)', 'test_contained_by_unsupported (model_fields.test_jsonfield.TestQuerying)', 'test_contains_unsupported (model_fields.test_jsonfield.TestQuerying)', 'test_deep_lookup_array (model_fields.test_jsonfield.TestQuerying)', 'test_deep_lookup_mixed (model_fields.test_jsonfield.TestQuerying)', 'test_deep_lookup_objs (model_fields.test_jsonfield.TestQuerying)', 'test_deep_lookup_transform (model_fields.test_jsonfield.TestQuerying)', 'test_deep_values (model_fields.test_jsonfield.TestQuerying)', 'test_exact (model_fields.test_jsonfield.TestQuerying)', 'test_exact_complex (model_fields.test_jsonfield.TestQuerying)', 'test_expression_wrapper_key_transform (model_fields.test_jsonfield.TestQuerying)', 'test_has_any_keys (model_fields.test_jsonfield.TestQuerying)', 'test_has_key (model_fields.test_jsonfield.TestQuerying)', 'test_has_key_deep (model_fields.test_jsonfield.TestQuerying)', 'test_has_key_list (model_fields.test_jsonfield.TestQuerying)', 'test_has_key_null_value (model_fields.test_jsonfield.TestQuerying)', 'test_icontains (model_fields.test_jsonfield.TestQuerying)', 'test_isnull (model_fields.test_jsonfield.TestQuerying)', 'test_isnull_key (model_fields.test_jsonfield.TestQuerying)', 'test_isnull_key_or_none (model_fields.test_jsonfield.TestQuerying)', 'test_join_key_transform_annotation_expression (model_fields.test_jsonfield.TestQuerying)', 'test_key_endswith (model_fields.test_jsonfield.TestQuerying)', 'test_key_escape (model_fields.test_jsonfield.TestQuerying)', 'test_key_icontains (model_fields.test_jsonfield.TestQuerying)', 'test_key_iendswith (model_fields.test_jsonfield.TestQuerying)', 'test_key_iexact (model_fields.test_jsonfield.TestQuerying)', 'test_key_in (model_fields.test_jsonfield.TestQuerying)', 'test_key_iregex (model_fields.test_jsonfield.TestQuerying)', 'test_key_istartswith (model_fields.test_jsonfield.TestQuerying)', 'test_key_quoted_string (model_fields.test_jsonfield.TestQuerying)', 'test_key_regex (model_fields.test_jsonfield.TestQuerying)', 'test_key_sql_injection_escape (model_fields.test_jsonfield.TestQuerying)', 'test_key_startswith (model_fields.test_jsonfield.TestQuerying)', 'test_key_transform_annotation_expression (model_fields.test_jsonfield.TestQuerying)', 'test_key_transform_expression (model_fields.test_jsonfield.TestQuerying)', 'test_key_transform_raw_expression (model_fields.test_jsonfield.TestQuerying)', 'test_key_values (model_fields.test_jsonfield.TestQuerying)', 'test_key_values_boolean (model_fields.test_jsonfield.TestQuerying)', 'test_lookup_exclude (model_fields.test_jsonfield.TestQuerying)', 'test_lookup_exclude_nonexistent_key (model_fields.test_jsonfield.TestQuerying)', 'test_lookups_with_key_transform (model_fields.test_jsonfield.TestQuerying)', 'test_nested_key_transform_annotation_expression (model_fields.test_jsonfield.TestQuerying)', 'test_nested_key_transform_expression (model_fields.test_jsonfield.TestQuerying)', 'test_nested_key_transform_on_subquery (model_fields.test_jsonfield.TestQuerying)', 'test_nested_key_transform_raw_expression (model_fields.test_jsonfield.TestQuerying)', 'test_none_key (model_fields.test_jsonfield.TestQuerying)', 'test_none_key_and_exact_lookup (model_fields.test_jsonfield.TestQuerying)', 'test_none_key_exclude (model_fields.test_jsonfield.TestQuerying)', 'test_obj_subquery_lookup (model_fields.test_jsonfield.TestQuerying)', 'test_order_grouping_custom_decoder (model_fields.test_jsonfield.TestQuerying)', 'test_ordering_by_transform (model_fields.test_jsonfield.TestQuerying)', 'test_ordering_grouping_by_count (model_fields.test_jsonfield.TestQuerying)', 'test_ordering_grouping_by_key_transform (model_fields.test_jsonfield.TestQuerying)', 'test_shallow_list_lookup (model_fields.test_jsonfield.TestQuerying)', 'test_shallow_lookup_obj_target (model_fields.test_jsonfield.TestQuerying)', 'test_shallow_obj_lookup (model_fields.test_jsonfield.TestQuerying)', 'test_usage_in_subquery (model_fields.test_jsonfield.TestQuerying)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-15503: resolved: True
+2026-03-21 12:12:49,920 - INFO - Attempting to stop container sweb.eval.django__django-15503.vexp-swebench-1774090616238...
+2026-03-21 12:13:05,302 - INFO - Attempting to remove container sweb.eval.django__django-15503.vexp-swebench-1774090616238...
+2026-03-21 12:13:05,324 - INFO - Container sweb.eval.django__django-15503.vexp-swebench-1774090616238 removed.
+2026-03-21 12:13:05,324 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.django_1776_django-15503:latest...
+2026-03-21 12:13:05,494 - INFO - Image swebench/sweb.eval.x86_64.django_1776_django-15503:latest removed.

@@ -1,0 +1,19 @@
+diff --git a/sphinx/cmd/quickstart.py b/sphinx/cmd/quickstart.py
+index a40a2107..fe52fda1 100644
+--- a/sphinx/cmd/quickstart.py
++++ b/sphinx/cmd/quickstart.py
+@@ -223,9 +223,13 @@ def ask_user(d: Dict) -> None:
+         print(__('sphinx-quickstart will not overwrite existing Sphinx projects.'))
+         print()
+         d['path'] = do_prompt(__('Please enter a new root path (or just Enter to exit)'),
+-                              '', is_path)
++                              '', allow_empty)
+         if not d['path']:
+             sys.exit(1)
++        d['path'] = path.expanduser(d['path'])
++        if not path.isdir(d['path']):
++            print(red('* ' + __('Please enter a valid path name.')))
++            continue
+ 
+     if 'sep' not in d:
+         print()

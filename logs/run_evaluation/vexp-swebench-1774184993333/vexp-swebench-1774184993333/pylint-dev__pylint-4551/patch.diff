@@ -1,0 +1,41 @@
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa1220..f0cb401 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -236,6 +236,36 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         except astroid.InferenceError:
+             pass
+ 
++        # Check for type annotations
++        try:
++            annotation = None
++
++            # Case 1: Annotated assignment (self.attr: Type = value)
++            if isinstance(node.parent, astroid.AnnAssign):
++                annotation = node.parent.annotation
++
++            # Case 2: Value is a Name referencing a parameter with annotation
++            # (def __init__(self, param: Type): self.attr = param)
++            elif isinstance(node.parent, astroid.Assign) and node.parent.value:
++                value = node.parent.value
++                if isinstance(value, astroid.Name):
++                    func = node.frame()
++                    if isinstance(func, astroid.FunctionDef):
++                        args = func.args
++                        for i, arg in enumerate(args.args):
++                            if arg.name == value.name and args.annotations[i]:
++                                annotation = args.annotations[i]
++                                break
++
++            if annotation:
++                for inferred in annotation.infer():
++                    if inferred not in (astroid.Uninferable, None):
++                        current = set(parent.instance_attrs_type[node.attrname])
++                        current.add(inferred)
++                        parent.instance_attrs_type[node.attrname] = list(current)
++        except astroid.InferenceError:
++            pass
++
+     def visit_import(self, node):
+         """visit an astroid.Import node
+ 

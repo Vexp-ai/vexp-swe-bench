@@ -1,0 +1,448 @@
+{
+  "lastUpdated": "2026-03-20",
+  "fullSetSize": 500,
+  "subsetSize": 100,
+  "entries": [
+    {
+      "system": "Gemini 2.0 flash",
+      "score": 13.5,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_gemini-2.0-flash",
+      "totalCost": 0,
+      "instanceCost": 0,
+      "instanceCalls": 0
+    },
+    {
+      "system": "DeepSeek V3.2 Reasoner",
+      "score": 60,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251201_mini-v1.17.1_deepseek-v3.2-reasoner",
+      "totalCost": 14.0381514,
+      "instanceCost": 0.03,
+      "instanceCalls": 46.404
+    },
+    {
+      "system": "GPT-5 mini (2025-08-07) (medium reasoning)",
+      "score": 59.8,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250807_mini-v1.7.0_gpt-5-mini",
+      "totalCost": 17.73853365,
+      "instanceCost": 0.04,
+      "instanceCalls": 14.466
+    },
+    {
+      "system": "GPT-5 nano (2025-08-07) (medium reasoning)",
+      "score": 34.8,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250807_mini-v1.7.0_gpt-5-nano",
+      "totalCost": 19.037590390000002,
+      "instanceCost": 0.04,
+      "instanceCalls": 39.76
+    },
+    {
+      "system": "GPT-5 Mini",
+      "score": 56.2,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_gpt-5-mini",
+      "totalCost": 23.600609549999998,
+      "instanceCost": 0.05,
+      "instanceCalls": 20.342
+    },
+    {
+      "system": "gpt-oss-120b",
+      "score": 26,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250807_mini-v1.7.0_gpt-oss-120b",
+      "totalCost": 28.559527899999996,
+      "instanceCost": 0.06,
+      "instanceCalls": 27.598
+    },
+    {
+      "system": "MiniMax M2.5 (high reasoning)",
+      "score": 75.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_minimax-2-5-high",
+      "totalCost": 36.644993922,
+      "instanceCost": 0.07,
+      "instanceCalls": 60.45
+    },
+    {
+      "system": "Qwen2.5-Coder 32B Instruct",
+      "score": 9,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250803_mini-v1.0.0_qwen2-5-coder-32b-instruct",
+      "totalCost": 34.05807032999999,
+      "instanceCost": 0.07,
+      "instanceCalls": 48.206
+    },
+    {
+      "system": "GLM-4.6 (T=1)",
+      "score": 55.4,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251201_mini-v1.17.1_glm-4.6",
+      "totalCost": 48.3050376,
+      "instanceCost": 0.1,
+      "instanceCalls": 49.348
+    },
+    {
+      "system": "Llama 4 Scout Instruct",
+      "score": 9.1,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250720_mini-v0.0.0-Llama-4-Scout-17B-Instruct",
+      "totalCost": 57.8157615,
+      "instanceCost": 0.12,
+      "instanceCalls": 29.216
+    },
+    {
+      "system": "Gemini 2.5 Flash (2025-04-17)",
+      "score": 28.7,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_gemini-2.5-flash",
+      "totalCost": 66.942859175,
+      "instanceCost": 0.13,
+      "instanceCalls": 26.646
+    },
+    {
+      "system": "Kimi K2.5 (high reasoning)",
+      "score": 70.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_kimi-k2-5-high",
+      "totalCost": 73.276870372,
+      "instanceCost": 0.15,
+      "instanceCalls": 51.178
+    },
+    {
+      "system": "GPT-4.1 (2025-04-14)",
+      "score": 39.6,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_gpt-4.1-2025-04-14",
+      "totalCost": 73.156562,
+      "instanceCost": 0.15,
+      "instanceCalls": 19.544
+    },
+    {
+      "system": "o4-mini (2025-04-16)",
+      "score": 45,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_o4-mini-2025-04-16",
+      "totalCost": 104.9866664,
+      "instanceCost": 0.21,
+      "instanceCalls": 23.278
+    },
+    {
+      "system": "Qwen3-Coder 480B/A35B Instruct",
+      "score": 55.4,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250802_mini-v1.0.0_qwen3-coder-480b-a35b-instruct",
+      "totalCost": 123.963554,
+      "instanceCost": 0.25,
+      "instanceCalls": 64.792
+    },
+    {
+      "system": "GPT-5.2 (2025-12-11)",
+      "score": 69,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251211_mini-v1.17.2_gpt-5.2-2025-12-11",
+      "totalCost": 134.8337487,
+      "instanceCost": 0.27,
+      "instanceCalls": 16.27
+    },
+    {
+      "system": "GPT-5 (2025-08-07) (medium reasoning)",
+      "score": 65,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250807_mini-v1.7.0_gpt-5",
+      "totalCost": 140.19150875,
+      "instanceCost": 0.28,
+      "instanceCalls": 13.208
+    },
+    {
+      "system": "Gemini 2.5 Pro (2025-05-06)",
+      "score": 53.6,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_gemini-2.5-pro",
+      "totalCost": 144.18604781250002,
+      "instanceCost": 0.29,
+      "instanceCalls": 20.478
+    },
+    {
+      "system": "GLM-4.5 (2025-08-22)",
+      "score": 54.2,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250822_mini-v1.9.1_glm-4.5",
+      "totalCost": 148.5951744,
+      "instanceCost": 0.3,
+      "instanceCalls": 40.224
+    },
+    {
+      "system": "GPT-5.1 (2025-11-13) (medium reasoning)",
+      "score": 66,
+      "date": "2025-11",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251120_mini-v1.15.0_gpt-5.1-2025-11-13",
+      "totalCost": 153.07773625000002,
+      "instanceCost": 0.31,
+      "instanceCalls": 21
+    },
+    {
+      "system": "Llama 4 Maverick Instruct",
+      "score": 21,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250720_mini-v0.0.0-Llama-4-Maverick-17B-Instruct",
+      "totalCost": 156.85304879999998,
+      "instanceCost": 0.31,
+      "instanceCalls": 48.076
+    },
+    {
+      "system": "Claude 4.5 Haiku (high reasoning)",
+      "score": 66.6,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_claude-4-5-haiku-high",
+      "totalCost": 165.46221805000002,
+      "instanceCost": 0.33,
+      "instanceCalls": 66.154
+    },
+    {
+      "system": "o3 (2025-04-16)",
+      "score": 58.4,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_o3-2025-04-16",
+      "totalCost": 166.826374,
+      "instanceCost": 0.33,
+      "instanceCalls": 24.698
+    },
+    {
+      "system": "Claude 3.7 Sonnet (20250219)",
+      "score": 52.8,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250720_mini-v0.0.0-claude-3-7-sonnet-20250219",
+      "totalCost": 177.3077241,
+      "instanceCost": 0.35,
+      "instanceCalls": 34.7
+    },
+    {
+      "system": "Gemini 3 Flash (high reasoning)",
+      "score": 75.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_gemini-3-flash-high",
+      "totalCost": 177.98206539999998,
+      "instanceCost": 0.36,
+      "instanceCalls": 56.126
+    },
+    {
+      "system": "Claude 4 Sonnet (20250514)",
+      "score": 64.9,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250726_mini-v1.0.0_claude-sonnet-4-20250514",
+      "totalCost": 185.7265839,
+      "instanceCost": 0.37,
+      "instanceCalls": 37.172
+    },
+    {
+      "system": "Minimax M2",
+      "score": 61,
+      "date": "2025-11",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251124_mini-v1.17.0_minimax-m2",
+      "totalCost": 214.128088645,
+      "instanceCost": 0.43,
+      "instanceCalls": 74.138
+    },
+    {
+      "system": "Kimi K2 Thinking",
+      "score": 63.4,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251210_mini-v1.17.2_kimi-k2-thinking",
+      "totalCost": 219.15361769999998,
+      "instanceCost": 0.44,
+      "instanceCalls": 46.82
+    },
+    {
+      "system": "GPT-4.1-mini (2025-04-14)",
+      "score": 23.9,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250720_mini-v0.0.0_gpt-4.1-mini-2025-04-14",
+      "totalCost": 217.57707639999998,
+      "instanceCost": 0.44,
+      "instanceCalls": 89.196
+    },
+    {
+      "system": "GPT-5-2 Codex",
+      "score": 72.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260219_mini-v2.0.0_gpt-5-2-codex",
+      "totalCost": 224.71194935,
+      "instanceCost": 0.45,
+      "instanceCalls": 28.072
+    },
+    {
+      "system": "GPT 5.2 Codex",
+      "score": 72.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260219_mini-v2.0.0_gpt-5-2-codex",
+      "totalCost": 224.71194935,
+      "instanceCost": 0.45,
+      "instanceCalls": 28.072
+    },
+    {
+      "system": "DeepSeek V3.2 (high reasoning)",
+      "score": 70,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_deepseek-3-2-high",
+      "totalCost": 223.92324825,
+      "instanceCost": 0.45,
+      "instanceCalls": 88.506
+    },
+    {
+      "system": "Gemini 3 Pro Preview (2025-11-18)",
+      "score": 74.2,
+      "date": "2025-11",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251118_mini-v1.15.0_gemini-3-pro-preview-20251118",
+      "totalCost": 229.978759475,
+      "instanceCost": 0.46,
+      "instanceCalls": 40.326
+    },
+    {
+      "system": "GPT-5-2 (high reasoning)",
+      "score": 72.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_gpt-5-2-high",
+      "totalCost": 236.78350885,
+      "instanceCost": 0.47,
+      "instanceCalls": 35.046
+    },
+    {
+      "system": "GPT-5.2 (2025-12-11) (high reasoning)",
+      "score": 71.8,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251211_mini-v1.17.2_gpt-5.2-2025-12-11-high",
+      "totalCost": 260.1295018,
+      "instanceCost": 0.52,
+      "instanceCalls": 19.762
+    },
+    {
+      "system": "GLM-5 (high reasoning)",
+      "score": 72.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_glm-5-high",
+      "totalCost": 267.19456811,
+      "instanceCost": 0.53,
+      "instanceCalls": 76.176
+    },
+    {
+      "system": "Kimi K2 Instruct",
+      "score": 43.8,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250807_mini-v1.7.0_kimi-k2-instruct",
+      "totalCost": 265.796683,
+      "instanceCost": 0.53,
+      "instanceCalls": 37.52
+    },
+    {
+      "system": "Claude Opus 4.6",
+      "score": 75.6,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_claude-4-6-opus",
+      "totalCost": 275.76132225,
+      "instanceCost": 0.55,
+      "instanceCalls": 28.932
+    },
+    {
+      "system": "Claude 4.5 Sonnet (20250929)",
+      "score": 70.6,
+      "date": "2025-09",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250929_mini-v1.13.3_sonnet-4-5-20250929",
+      "totalCost": 279.16737045,
+      "instanceCost": 0.56,
+      "instanceCalls": 50.988
+    },
+    {
+      "system": "GPT-5.1-codex (medium reasoning)",
+      "score": 66,
+      "date": "2025-11",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251124_mini-v1.16.0_gpt-5.1-codex",
+      "totalCost": 294.44117500000004,
+      "instanceCost": 0.59,
+      "instanceCalls": 23.882
+    },
+    {
+      "system": "Claude 4.5 Sonnet (high reasoning)",
+      "score": 71.4,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_claude-4-5-sonnet-high",
+      "totalCost": 328.9482492,
+      "instanceCost": 0.66,
+      "instanceCalls": 48.3
+    },
+    {
+      "system": "Claude 4.5 Opus medium (20251101)",
+      "score": 74.4,
+      "date": "2025-11",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251124_mini-v1.16.0_claude-opus-4-5-20251101",
+      "totalCost": 360.6224985,
+      "instanceCost": 0.72,
+      "instanceCalls": 38.042
+    },
+    {
+      "system": "Claude 4.5 Opus (high reasoning)",
+      "score": 76.8,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260217_mini-v2.0.0_claude-4-5-opus-high",
+      "totalCost": 376.9539985,
+      "instanceCost": 0.75,
+      "instanceCalls": 32.896
+    },
+    {
+      "system": "Gemini 3 Pro",
+      "score": 69.6,
+      "date": "2026-02",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20260226_mini-v2.0.0_gemini-3-pro-high",
+      "totalCost": 480.0099282,
+      "instanceCost": 0.96,
+      "instanceCalls": 51.282
+    },
+    {
+      "system": "Claude 4 Opus (20250514)",
+      "score": 67.6,
+      "date": "2025-08",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250802_mini-v1.0.0_claude-4-opus-20250514",
+      "totalCost": 565.6352234999999,
+      "instanceCost": 1.13,
+      "instanceCalls": 31.076
+    },
+    {
+      "system": "GPT-4o (2024-11-20)",
+      "score": 21.6,
+      "date": "2025-07",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20250720_mini-v0.0.0-gpt-4o-2024-11-20",
+      "totalCost": 765.5740625000001,
+      "instanceCost": 1.53,
+      "instanceCalls": 63.066
+    },
+    {
+      "system": "Claude Sonnet 4.6 (self-reported)",
+      "score": 79.6,
+      "date": "2025-05",
+      "source": "https://www.anthropic.com/news/claude-sonnet-4-6",
+      "selfReported": true,
+      "totalCost": null,
+      "instanceCost": null
+    },
+    {
+      "system": "Devstral small (2512)",
+      "score": 56.4,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251209_mini-v1.17.2_devstral-small-2512",
+      "totalCost": null,
+      "instanceCost": null,
+      "instanceCalls": 86.866
+    },
+    {
+      "system": "Devstral (2512)",
+      "score": 53.8,
+      "date": "2025-12",
+      "source": "https://github.com/swe-bench/experiments/tree/main/evaluation/verified/20251209_mini-v1.17.2_devstral-2512",
+      "totalCost": null,
+      "instanceCost": null,
+      "instanceCalls": 75.086
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+diff --git a/pylint/config/argument.py b/pylint/config/argument.py
+index 30a5fd1..e22da54 100644
+--- a/pylint/config/argument.py
++++ b/pylint/config/argument.py
+@@ -114,11 +114,66 @@ def _regex_transformer(value: str) -> Pattern[str]:
+ def _regexp_csv_transfomer(value: str) -> Sequence[Pattern[str]]:
+     """Transforms a comma separated list of regular expressions."""
+     patterns: list[Pattern[str]] = []
+-    for pattern in _csv_transformer(value):
++    for pattern in _parse_regex_csv(value):
+         patterns.append(_regex_transformer(pattern))
+     return patterns
+ 
+ 
++def _parse_regex_csv(value: str) -> list[str]:
++    """Split a comma-separated string of regular expressions.
++
++    This function handles commas inside regex quantifiers like {1,3} and
++    character classes like [a,b] correctly by not splitting on them.
++    """
++    # If the value is already a list/tuple, return it
++    if isinstance(value, (list, tuple)):
++        return list(value)
++
++    result: list[str] = []
++    current = ""
++    bracket_depth = 0  # Track depth inside [] character classes
++    brace_depth = 0    # Track depth inside {} quantifiers
++    i = 0
++
++    while i < len(value):
++        char = value[i]
++
++        # Handle escape sequences - skip next character
++        if char == "\\" and i + 1 < len(value):
++            current += char + value[i + 1]
++            i += 2
++            continue
++
++        # Track character class brackets
++        if char == "[":
++            bracket_depth += 1
++        elif char == "]" and bracket_depth > 0:
++            bracket_depth -= 1
++        # Track quantifier braces
++        elif char == "{":
++            brace_depth += 1
++        elif char == "}" and brace_depth > 0:
++            brace_depth -= 1
++        # Split on comma only when not inside brackets or braces
++        elif char == "," and bracket_depth == 0 and brace_depth == 0:
++            stripped = current.strip()
++            if stripped:
++                result.append(stripped)
++            current = ""
++            i += 1
++            continue
++
++        current += char
++        i += 1
++
++    # Don't forget the last pattern
++    stripped = current.strip()
++    if stripped:
++        result.append(stripped)
++
++    return result
++
++
+ def _regexp_paths_csv_transfomer(value: str) -> Sequence[Pattern[str]]:
+     """Transforms a comma separated list of regular expressions paths."""
+     patterns: list[Pattern[str]] = []

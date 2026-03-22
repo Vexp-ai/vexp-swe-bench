@@ -1,0 +1,53 @@
+diff --git a/sphinx/util/docfields.py b/sphinx/util/docfields.py
+index 3a3367eb..ce7353d3 100644
+--- a/sphinx/util/docfields.py
++++ b/sphinx/util/docfields.py
+@@ -204,6 +204,39 @@ class TypedField(GroupedField):
+         return nodes.field('', fieldname, fieldbody)
+ 
+ 
++def _split_type_and_name(fieldarg: str) -> Tuple[str, str]:
++    """Split a typed field argument into type and name.
++
++    This handles types with parentheses or brackets like ``dict(str, str)`` or
++    ``Dict[str, str]`` properly, ensuring that the type isn't incorrectly split
++    at a space within parentheses or brackets.
++
++    :param fieldarg: The field argument to split (e.g., "dict(str, str) name")
++    :returns: A tuple of (type, name)
++    :raises ValueError: If the field argument cannot be split into type and name
++    """
++    # Track parenthesis/bracket depth to avoid splitting inside them
++    paren_depth = 0
++    bracket_depth = 0
++    for i, char in enumerate(fieldarg):
++        if char == '(':
++            paren_depth += 1
++        elif char == ')':
++            paren_depth -= 1
++        elif char == '[':
++            bracket_depth += 1
++        elif char == ']':
++            bracket_depth -= 1
++        elif char == ' ' and paren_depth == 0 and bracket_depth == 0:
++            # Found a space outside parentheses and brackets - split here
++            argtype = fieldarg[:i].strip()
++            argname = fieldarg[i:].strip()
++            if argtype and argname:
++                return argtype, argname
++            break
++    raise ValueError("Cannot split fieldarg")
++
++
+ class DocFieldTransformer:
+     """
+     Transforms field lists in "doc field" syntax into better-looking
+@@ -298,7 +331,7 @@ class DocFieldTransformer:
+             # also support syntax like ``:param type name:``
+             if typedesc.is_typed:
+                 try:
+-                    argtype, argname = fieldarg.split(None, 1)
++                    argtype, argname = _split_type_and_name(fieldarg)
+                 except ValueError:
+                     pass
+                 else:

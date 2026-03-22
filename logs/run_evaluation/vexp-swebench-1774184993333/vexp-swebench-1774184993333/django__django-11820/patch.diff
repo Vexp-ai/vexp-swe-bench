@@ -1,0 +1,15 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 3ce711f3f1..34d171cb4f 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1712,7 +1712,9 @@ class Model(metaclass=ModelBase):
+                     if fld.is_relation:
+                         _cls = fld.get_path_info()[-1].to_opts.model
+                 except (FieldDoesNotExist, AttributeError):
+-                    if fld is None or fld.get_transform(part) is None:
++                    if fld is None or (
++                        fld.get_transform(part) is None and part != 'pk'
++                    ):
+                         errors.append(
+                             checks.Error(
+                                 "'ordering' refers to the nonexistent field, "

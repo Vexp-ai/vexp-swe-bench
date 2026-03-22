@@ -1,0 +1,55 @@
+2026-03-21 22:58:46,727 - INFO - Creating container for sympy__sympy-16766...
+2026-03-21 22:58:46,872 - INFO - Container for sympy__sympy-16766 created: f47eb90d1641b54aed68d777f8280054368eb42be34a12182aa1f74fbaa173dd
+2026-03-21 22:58:47,044 - INFO - Container for sympy__sympy-16766 started: f47eb90d1641b54aed68d777f8280054368eb42be34a12182aa1f74fbaa173dd
+2026-03-21 22:58:47,044 - INFO - Intermediate patch for sympy__sympy-16766 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sympy__sympy-16766/patch.diff, now applying to container...
+2026-03-21 22:58:47,113 - INFO - >>>>> Applied Patch:
+Checking patch sympy/printing/pycode.py...
+Applied patch sympy/printing/pycode.py cleanly.
+
+2026-03-21 22:58:47,375 - INFO - Git diff before:
+diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py
+index a3f031073..683292267 100644
+--- a/sympy/printing/pycode.py
++++ b/sympy/printing/pycode.py
+@@ -346,6 +346,13 @@ def _print_Stream(self, strm):
+     def _print_NoneToken(self, arg):
+         return 'None'
+ 
++    def _print_Indexed(self, expr):
++        base, *index = expr.args
++        return "{}[{}]".format(self._print(base), ", ".join([self._print(ind) for ind in index]))
++
++    def _print_IndexedBase(self, expr):
++        return self._print(expr.label)
++
+ 
+ class PythonCodePrinter(AbstractPythonCodePrinter):
+2026-03-21 22:58:47,376 - INFO - Eval script for sympy__sympy-16766 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sympy__sympy-16766/eval.sh; copying to container...
+2026-03-21 22:58:50,704 - INFO - Test runtime: 3.29 seconds
+2026-03-21 22:58:50,704 - INFO - Test output for sympy__sympy-16766 written to logs/run_evaluation/vexp-swebench-1774108770738/vexp-swebench-1774108770738/sympy__sympy-16766/test_output.txt
+2026-03-21 22:58:50,741 - INFO - Git diff after:
+diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py
+index a3f031073..683292267 100644
+--- a/sympy/printing/pycode.py
++++ b/sympy/printing/pycode.py
+@@ -346,6 +346,13 @@ def _print_Stream(self, strm):
+     def _print_NoneToken(self, arg):
+         return 'None'
+ 
++    def _print_Indexed(self, expr):
++        base, *index = expr.args
++        return "{}[{}]".format(self._print(base), ", ".join([self._print(ind) for ind in index]))
++
++    def _print_IndexedBase(self, expr):
++        return self._print(expr.label)
++
+ 
+ class PythonCodePrinter(AbstractPythonCodePrinter):
+2026-03-21 22:58:50,742 - INFO - Grading answer for sympy__sympy-16766...
+2026-03-21 22:58:50,742 - INFO - report: {'sympy__sympy-16766': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_PythonCodePrinter'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_MpmathPrinter', 'test_NumPyPrinter', 'test_SciPyPrinter', 'test_pycode_reserved_words', 'test_printmethod', 'test_codegen_ast_nodes', 'test_issue_14283'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-16766: resolved: True
+2026-03-21 22:58:50,742 - INFO - Attempting to stop container sweb.eval.sympy__sympy-16766.vexp-swebench-1774108770738...
+2026-03-21 22:59:06,151 - INFO - Attempting to remove container sweb.eval.sympy__sympy-16766.vexp-swebench-1774108770738...
+2026-03-21 22:59:06,172 - INFO - Container sweb.eval.sympy__sympy-16766.vexp-swebench-1774108770738 removed.
+2026-03-21 22:59:06,172 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.sympy_1776_sympy-16766:latest...
+2026-03-21 22:59:06,219 - INFO - Image swebench/sweb.eval.x86_64.sympy_1776_sympy-16766:latest removed.

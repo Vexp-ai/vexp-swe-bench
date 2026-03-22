@@ -1,0 +1,21 @@
+diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py
+index 88b35fc43..ef06abd9f 100644
+--- a/django/utils/numberformat.py
++++ b/django/utils/numberformat.py
+@@ -31,6 +31,16 @@ def format(number, decimal_sep, decimal_pos=None, grouping=0, thousand_sep='',
+         # scientific notation to avoid high memory usage in {:f}'.format().
+         _, digits, exponent = number.as_tuple()
+         if abs(exponent) + len(digits) > 200:
++            # If decimal_pos is provided and the number is smaller than what
++            # can be represented with the given decimal positions (i.e.,
++            # abs(exponent) > decimal_pos), return zeros instead of
++            # scientific notation.
++            if decimal_pos is not None and exponent < 0 and abs(exponent) > decimal_pos:
++                # Number is too small to be represented with decimal_pos places
++                str_number = '0'
++                if decimal_pos:
++                    str_number = '0' + decimal_sep + '0' * decimal_pos
++                return str_number
+             number = '{:e}'.format(number)
+             coefficient, exponent = number.split('e')
+             # Format the coefficient.

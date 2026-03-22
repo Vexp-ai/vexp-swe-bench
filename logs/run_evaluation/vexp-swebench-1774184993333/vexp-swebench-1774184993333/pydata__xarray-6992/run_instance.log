@@ -1,0 +1,25 @@
+2026-03-22 13:22:27,810 - INFO - Creating container for pydata__xarray-6992...
+2026-03-22 13:22:27,878 - INFO - Container for pydata__xarray-6992 created: aa88e476a3a25ccc931f014bd0f23c28fbb27438888cf4233fed7ebdbcf535eb
+2026-03-22 13:22:28,086 - INFO - Container for pydata__xarray-6992 started: aa88e476a3a25ccc931f014bd0f23c28fbb27438888cf4233fed7ebdbcf535eb
+2026-03-22 13:22:28,086 - INFO - Intermediate patch for pydata__xarray-6992 written to logs/run_evaluation/vexp-swebench-1774180689087/vexp-swebench-1774180689087/pydata__xarray-6992/patch.diff, now applying to container...
+2026-03-22 13:22:28,178 - INFO - >>>>> Applied Patch:
+Checking patch xarray/core/dataset.py...
+Applied patch xarray/core/dataset.py cleanly.
+
+2026-03-22 13:22:28,289 - INFO - Git diff before:
+diff --git a/xarray/core/dataset.py b/xarray/core/dataset.py
+index 620f32f8..bd0a337f 100644
+--- a/xarray/core/dataset.py
++++ b/xarray/core/dataset.py
+@@ -365,7 +365,9 @@ class DataVariables(Mapping[Any, "DataArray"]):
+         )
+ 
+     def __len__(self) -> int:
+-        return len(self._dataset._variables) - len(self._dataset._coord_names)
++        return len(self._dataset._variables) - len(
++            self._dataset._coord_names & self._dataset._variables.keys()
++        )
+ 
+     def __contains__(self, key: Hashable) -> bool:
+         return key in self._dataset._variables and key not in self._dataset._coord_names
+2026-03-22 13:22:28,289 - INFO - Eval script for pydata__xarray-6992 written to logs/run_evaluation/vexp-swebench-1774180689087/vexp-swebench-1774180689087/pydata__xarray-6992/eval.sh; copying to container...

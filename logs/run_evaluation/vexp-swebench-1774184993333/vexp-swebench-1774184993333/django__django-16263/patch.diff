@@ -1,0 +1,123 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index 9735ce10c8..8b9d6f7f90 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -73,6 +73,18 @@ def get_children_from_q(q):
+             yield child
+ 
+ 
++def get_refs_from_expression(expression):
++    """
++    Recursively yield all Ref objects in an expression tree.
++    """
++    if isinstance(expression, Ref):
++        yield expression.refs
++    if hasattr(expression, "get_source_expressions"):
++        for source in expression.get_source_expressions():
++            if source:
++                yield from get_refs_from_expression(source)
++
++
+ JoinInfo = namedtuple(
+     "JoinInfo",
+     ("final_field", "targets", "opts", "joins", "path", "transform_function"),
+@@ -435,17 +447,43 @@ class Query(BaseExpression):
+         annotation.set_source_expressions(new_exprs)
+         return annotation, col_cnt
+ 
+-    def get_aggregation(self, using, added_aggregate_names):
++    def get_aggregation(self, using, added_aggregate_names, strip_unused_annotations=False):
+         """
+         Return the dictionary with the values of the existing aggregations.
+         """
+         if not self.annotation_select:
+             return {}
+-        existing_annotations = [
+-            annotation
++        existing_annotations = {
++            alias: annotation
+             for alias, annotation in self.annotations.items()
+             if alias not in added_aggregate_names
+-        ]
++        }
++        # Strip unused annotations if requested and we have existing annotations.
++        # This is an optimization to avoid the subquery path when possible.
++        # We can only strip non-aggregate annotations that are not referenced by
++        # the WHERE clause or other annotations. Aggregate annotations must be
++        # kept because they affect GROUP BY behavior.
++        if strip_unused_annotations and existing_annotations:
++            used_refs = self._get_used_annotation_refs(added_aggregate_names)
++            existing_annotations = {
++                alias: annotation
++                for alias, annotation in existing_annotations.items()
++                if alias in used_refs
++                or getattr(annotation, "contains_aggregate", True)
++            }
++            # Update the annotation mask to exclude unused annotations.
++            used_aliases = used_refs | set(added_aggregate_names) | {
++                alias
++                for alias, annotation in self.annotations.items()
++                if getattr(annotation, "contains_aggregate", True)
++            }
++            if self.annotation_select_mask is not None:
++                self.set_annotation_mask(
++                    self.annotation_select_mask.intersection(used_aliases)
++                )
++            else:
++                self.set_annotation_mask(used_aliases)
++        existing_annotations = list(existing_annotations.values())
+         # Decide if we need to use a subquery.
+         #
+         # Existing annotations would cause incorrect results as get_aggregation()
+@@ -545,13 +583,50 @@ class Query(BaseExpression):
+ 
+         return dict(zip(outer_query.annotation_select, result))
+ 
++    def _get_used_annotation_refs(self, added_aggregate_names):
++        """
++        Return the set of annotation names that are used by the query.
++
++        An annotation is considered "used" if it is referenced by:
++        - The WHERE clause (filters)
++        - Another annotation that is used (transitive closure)
++
++        This method computes the transitive closure of annotation references,
++        starting from the WHERE clause and any added aggregates.
++        """
++        # Collect all refs from the WHERE clause.
++        used_refs = set(get_refs_from_expression(self.where))
++
++        # Compute transitive closure: if an annotation A references annotation B,
++        # and A is used, then B is also used.
++        annotations_to_check = set(added_aggregate_names) | used_refs
++        checked = set()
++
++        while annotations_to_check:
++            alias = annotations_to_check.pop()
++            if alias in checked:
++                continue
++            checked.add(alias)
++            if alias in self.annotations:
++                annotation = self.annotations[alias]
++                refs = set(get_refs_from_expression(annotation))
++                used_refs |= refs
++                annotations_to_check |= refs - checked
++
++        return used_refs
++
+     def get_count(self, using):
+         """
+         Perform a COUNT() query using the current filter constraints.
+         """
+         obj = self.clone()
+         obj.add_annotation(Count("*"), alias="__count", is_summary=True)
+-        return obj.get_aggregation(using, ["__count"])["__count"]
++        # Strip unused annotations from the count query to improve performance.
++        # Annotations that are not referenced by filters, other annotations,
++        # or ordering can be safely removed.
++        return obj.get_aggregation(using, ["__count"], strip_unused_annotations=True)[
++            "__count"
++        ]
+ 
+     def has_filters(self):
+         return self.where

@@ -1,0 +1,24 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index 13a6809dd..99b0ff732 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -446,10 +446,19 @@ class Query(BaseExpression):
+         # those operations must be done in a subquery so that the query
+         # aggregates on the limit and/or distinct results instead of applying
+         # the distinct and limit after the aggregation.
++        #
++        # If an annotation contains a window function, a subquery must also be
++        # used since SQL doesn't allow aggregate functions to contain window
++        # function calls.
++        has_existing_window_expression = any(
++            getattr(annotation, "contains_over_clause", True)
++            for annotation in self.annotations.values()
++        )
+         if (
+             isinstance(self.group_by, tuple)
+             or self.is_sliced
+             or has_existing_aggregation
++            or has_existing_window_expression
+             or refs_subquery
+             or qualify
+             or self.distinct

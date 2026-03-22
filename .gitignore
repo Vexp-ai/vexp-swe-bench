@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.venv/
+venv/
+
+# Runtime / cached repos
+.bench-repos/
+
+# Full dataset (downloaded by setup.sh, ~8MB)
+swebench-verified-full.jsonl
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc

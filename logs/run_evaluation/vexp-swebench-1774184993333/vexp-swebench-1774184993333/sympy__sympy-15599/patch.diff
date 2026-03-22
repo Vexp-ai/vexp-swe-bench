@@ -1,0 +1,29 @@
+diff --git a/sympy/core/mod.py b/sympy/core/mod.py
+index eae25630..d08e5e4e 100644
+--- a/sympy/core/mod.py
++++ b/sympy/core/mod.py
+@@ -139,6 +139,24 @@ def doit(p, q):
+                 net = prod_mod1*prod_mod
+                 return prod_non_mod*cls(net, q)
+ 
++            if q.is_Integer:
++                # reduce integer coefficients mod q
++                # e.g., Mod(3*i, 2) -> Mod(1*i, 2) = Mod(i, 2)
++                # e.g., Mod(5*i, 3) -> Mod(2*i, 3)
++                new_args = []
++                reduced = False
++                for arg in non_mod_l:
++                    if arg.is_Integer:
++                        r = arg % q
++                        new_args.append(r)
++                        if r != arg:
++                            reduced = True
++                    else:
++                        new_args.append(arg)
++                if reduced:
++                    net = Mul(*new_args)
++                    return cls(net, q)
++
+         # XXX other possibilities?
+ 
+         # extract gcd; any further simplification should be done by the user
